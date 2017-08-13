@@ -19,7 +19,7 @@ type PersonalInfo struct {
 	Id string `json:"id"`
 	Firstname string `json:"firstname"`
 	Lastname  string `json:"lastname"`
-	DOB       string `json:"DOB"`
+	DOB       string `json:"dob"`
 	Email     string `json:"email"`
 	Mobile    string `json:"mobile"`
 }
@@ -44,13 +44,26 @@ func GetInfo(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 func CreatePersonalInfo(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	logger.Debug("Entering CreatePersonalInfo")
 
-	if len(args) < 2 {
+	if len(args) < 6 {
 		logger.Error("Invalid number of args")
-		return nil, errors.New("Expected atleast two arguments for info creation")
+		return nil, errors.New("Expected six arguments for info creation")
 	}
-
+	
 	var id = args[0]
-	var input = args[1]
+	var firstName = args[1]
+	var lastName = args[2]
+	var dob = args[3]
+	var email = args[4]
+	var mobile = args[5]
+	
+	input := `{
+		"id": "` + id + `", 
+		"firstname": "` + firstName + `", 
+		"lastname": ` + lastName + `
+		"dob": "` + dob + `", 
+		"email": "` + email + `", 
+		"mobile": ` + mobile + `
+	}`
 
 	err := stub.PutState(id, []byte(input))
 	if err != nil {
